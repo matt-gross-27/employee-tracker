@@ -72,10 +72,7 @@ viewTable = (obj) => {
     new Sql(obj).generateQuery(),
     [],
     function(err, res) {
-      if (err) {
-        console.log('ERROR: ' + query.sql);
-        return;
-      }
+      if (err) throw err;
       console.log('\n');
       console.table(res);
       console.log('\n');
@@ -316,8 +313,6 @@ promptUpdateEmployee = (employees, roles, obj) => {
       parseInt(manager),
       parseInt(employee)
     ];
-    console.log(params);
-    console.log(sql);
     connection.query(
       sql, params, (err, res) => {
         if (err) throw err;
