@@ -2,6 +2,7 @@
 require('dotenv').config();
 const inquirer = require('inquirer');
 const mysql2 = require('mysql2');
+const cTable = require('console.table');
 const Sql = require('./lib/queries');
 
 const connection = mysql2.createConnection({
@@ -15,36 +16,56 @@ const connection = mysql2.createConnection({
 connection.connect(err => {
   if (err) throw err;
   console.log(`
-
-    ███████╗███╗░░░███╗██████╗░██╗░░░░░░█████╗░██╗░░░██╗███████╗███████╗
-    ██╔════╝████╗░████║██╔══██╗██║░░░░░██╔══██╗╚██╗░██╔╝██╔════╝██╔════╝
-    █████╗░░██╔████╔██║██████╔╝██║░░░░░██║░░██║░╚████╔╝░█████╗░░█████╗░░
-    ██╔══╝░░██║╚██╔╝██║██╔═══╝░██║░░░░░██║░░██║░░╚██╔╝░░██╔══╝░░██╔══╝░░
-    ███████╗██║░╚═╝░██║██║░░░░░███████╗╚█████╔╝░░░██║░░░███████╗███████╗
-    ╚══════╝╚═╝░░░░░╚═╝╚═╝░░░░░╚══════╝░╚════╝░░░░╚═╝░░░╚══════╝╚══════╝
-
-         ████████╗██████╗░░█████╗░░█████╗░██╗░░██╗███████╗██████╗░
-         ╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██║░██╔╝██╔════╝██╔══██╗
-         ░░░██║░░░██████╔╝███████║██║░░╚═╝█████═╝░█████╗░░██████╔╝
-         ░░░██║░░░██╔══██╗██╔══██║██║░░██╗██╔═██╗░██╔══╝░░██╔══██╗
-         ░░░██║░░░██║░░██║██║░░██║╚█████╔╝██║░╚██╗███████╗██║░░██║
-         ░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝
+███████╗███╗░░░███╗██████╗░██╗░░░░░░█████╗░██╗░░░██╗███████╗███████╗░░░████████╗██████╗░░█████╗░░█████╗░██╗░░██╗███████╗██████╗
+██╔════╝████╗░████║██╔══██╗██║░░░░░██╔══██╗╚██╗░██╔╝██╔════╝██╔════╝░░░╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██║░██╔╝██╔════╝██╔══██╗
+█████╗░░██╔████╔██║██████╔╝██║░░░░░██║░░██║░╚████╔╝░█████╗░░█████╗░░░░░░░░██║░░░██████╔╝███████║██║░░╚═╝█████═╝░█████╗░░██████╔╝
+██╔══╝░░██║╚██╔╝██║██╔═══╝░██║░░░░░██║░░██║░░╚██╔╝░░██╔══╝░░██╔══╝░░░░░░░░██║░░░██╔══██╗██╔══██║██║░░██╗██╔═██╗░██╔══╝░░██╔══██╗
+███████╗██║░╚═╝░██║██║░░░░░███████╗╚█████╔╝░░░██║░░░███████╗███████╗░░░░░░██║░░░██║░░██║██║░░██║╚█████╔╝██║░╚██╗███████╗██║░░██║
+╚══════╝╚═╝░░░░░╚═╝╚═╝░░░░░╚══════╝░╚════╝░░░░╚═╝░░░╚══════╝╚══════╝░░░░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝
   
   `);
   promptUser();
 });
 
 promptUser = () => {
-  return inquirer.prompt([
+  return inquirer.prompt(
     {
       type: 'list',
-      name: 'tableName',
-      message: 'Which table would you like to view',
-      choices: ['employee', 'department', 'role']
+      name: 'mainMenu',
+      message: 'Select from the following options?',
+      choices: [  
+          'View all departments'
+         ,'View all roles'
+         ,'View all employees'
+         ,'Add a department'
+         ,'Add a role'
+         ,'Add an employee'
+         ,'Update an employee'
+         ,'Quit'
+      ]
     }
-  ])
+  )
   .then(data => {
-    viewTable(data);
+    if (data.mainMenu === 'Quit') {
+      console.log(`
+
+██████╗░██╗░░░██╗███████╗██╗
+██╔══██╗╚██╗░██╔╝██╔════╝██║
+██████╦╝░╚████╔╝░█████╗░░██║
+██╔══██╗░░╚██╔╝░░██╔══╝░░╚═╝
+██████╦╝░░░██║░░░███████╗██╗
+╚═════╝░░░░╚═╝░░░╚══════╝╚═╝
+
+      `);
+      connection.end();
+      return
+    }
+    if (data.mainMenu.substring(0, 4) === 'View') {
+      viewTable(data);
+    } else {
+      console.log('Still working on handling that request');
+      connection.end();
+    }
   })
   .catch(err => {
     if (err) throw err
@@ -53,7 +74,7 @@ promptUser = () => {
 
 viewTable = (obj) => {
   const query = connection.query(
-    new Sql(obj).selectAllFromTable(),
+    new Sql(obj).viewTableSql(),
     [],
     (err, res) => {
       if (err) {
@@ -61,7 +82,6 @@ viewTable = (obj) => {
         return;
       }
       console.table(res);
-      console.log(obj.tableName)
     }
   );
   connection.end();
