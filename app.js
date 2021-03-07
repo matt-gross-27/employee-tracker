@@ -8,7 +8,7 @@ const Sql = require('./lib/queries');
 const connection = mysql2.createConnection({
   host: process.env.HOST,
   port: process.env.DB_PORT,
-  user: 'root',
+  user: process.env.USERDB,
   password: process.env.PASSWORD,
   database: process.env.DB
 });
