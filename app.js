@@ -44,8 +44,13 @@ promptUser = () => {
   ).then(data => {
     if (data.mainMenu.substring(0, 4) === 'View') {
       viewTable(data);
+    
     } else if (data.mainMenu.substring(0,3) === 'Add') {
       addTableData(data);
+    
+    } else if (data.mainMenu === 'Update an employee'){
+      updateEmployee(data);
+    
     } else if (data.mainMenu === 'Quit') {
       console.log(`
 
@@ -54,10 +59,7 @@ promptUser = () => {
 
       `);
       connection.end();
-      return
-    } else {
-      console.log('Still working on handling that request');
-      connection.end();
+      return;
     }
   }).catch(err => {
     if (err) throw err;
@@ -187,7 +189,7 @@ addEmployee = (obj) => {
       const roles = res.map(role => `${role.id}: ${role.title}`);
       getManagers(roles, obj);
     }
-  )
+  );
 }
 
 getManagers = (roles, obj) => {
@@ -257,3 +259,78 @@ promptAddEmployee = (roles, managers, obj) => {
     if (err) throw err;
   });
 };
+
+updateEmployee = (obj) => {
+  connection.query(
+    `SELECT A.id, CONCAT(A.first_name,' ',A.last_name) AS full_name, B.title
+     FROM employee A
+     LEFT JOIN role B ON A.role_id = B.id`,
+    [],
+    function(err, res) {
+      if (err) throw err;
+      const employees = res.map(emp => `${emp.id}: ${emp.full_name} (${emp.title})`);
+      getRoles(employees, obj);
+    }
+  );
+}
+
+getRoles = (employees, obj) => {
+  connection.query(
+    'SELECT id, title FROM role',
+    [],
+    function(err, res) {
+      if (err) throw err;
+      const roles = res.map(role => `${role.id}: ${role.title}`);
+      promptUpdateEmployee(employees, roles, obj);
+    }
+  );
+}
+
+promptUpdateEmployee = (employees, roles, obj) => {
+  inquirer.prompt([
+    {
+      type: 'list',
+      message: 'Select the employee you would like to update',
+      name: 'employee',
+      choices: employees
+    },
+    {
+      type: 'list',
+      message: `Select the employee's new job title`,
+      name: 'title',
+      choices: roles
+    },
+    {
+      type: 'list',
+      message: `Select the employee's new manager`,
+      name: 'manager',
+      choices: employees
+    }
+  ])
+  .then(data => {
+    const { employee, manager, title } = data;
+    const sql = new Sql(obj).generateQuery();
+    const params = [
+      parseInt(title),
+      parseInt(manager),
+      parseInt(employee)
+    ];
+    console.log(params);
+    console.log(sql);
+    connection.query(
+      sql, params, (err, res) => {
+        if (err) throw err;
+        console.log(`
+        Updated employee: 
+          - employee: ${employee} ===> new title:${title.split(':')[1]}
+          - new manager: ${manager.split(':')[1].substring(1)}
+        `);
+        promptUser();
+      }
+    )
+
+  })
+  .catch(err => {
+    if (err) throw err;
+  });
+}
