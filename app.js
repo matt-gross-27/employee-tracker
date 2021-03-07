@@ -1,35 +1,68 @@
 // access process.env.?
 require('dotenv').config();
 const inquirer = require('inquirer');
+const mysql2 = require('mysql2');
+const Sql = require('./lib/queries');
 
-const connection = mysql12.connection({
+const connection = mysql2.createConnection({
   host: process.env.HOST,
   port: process.env.DB_PORT,
-  user: process.env.USER,
+  user: 'root',
   password: process.env.PASSWORD,
   database: process.env.DB
-})
+});
 
-logIn = () => {
+connection.connect(err => {
+  if (err) throw err;
+  console.log(`
+
+    ███████╗███╗░░░███╗██████╗░██╗░░░░░░█████╗░██╗░░░██╗███████╗███████╗
+    ██╔════╝████╗░████║██╔══██╗██║░░░░░██╔══██╗╚██╗░██╔╝██╔════╝██╔════╝
+    █████╗░░██╔████╔██║██████╔╝██║░░░░░██║░░██║░╚████╔╝░█████╗░░█████╗░░
+    ██╔══╝░░██║╚██╔╝██║██╔═══╝░██║░░░░░██║░░██║░░╚██╔╝░░██╔══╝░░██╔══╝░░
+    ███████╗██║░╚═╝░██║██║░░░░░███████╗╚█████╔╝░░░██║░░░███████╗███████╗
+    ╚══════╝╚═╝░░░░░╚═╝╚═╝░░░░░╚══════╝░╚════╝░░░░╚═╝░░░╚══════╝╚══════╝
+
+         ████████╗██████╗░░█████╗░░█████╗░██╗░░██╗███████╗██████╗░
+         ╚══██╔══╝██╔══██╗██╔══██╗██╔══██╗██║░██╔╝██╔════╝██╔══██╗
+         ░░░██║░░░██████╔╝███████║██║░░╚═╝█████═╝░█████╗░░██████╔╝
+         ░░░██║░░░██╔══██╗██╔══██║██║░░██╗██╔═██╗░██╔══╝░░██╔══██╗
+         ░░░██║░░░██║░░██║██║░░██║╚█████╔╝██║░╚██╗███████╗██║░░██║
+         ░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝
+  
+  `);
+  promptUser();
+});
+
+promptUser = () => {
   return inquirer.prompt([
     {
-      type: 'input',
-      message: 'What is your name',
-      name: 'nom'
-    },
-    {
-      type: 'input',
-      message: 'what is your favorite color',
-      name: 'favColor'
+      type: 'list',
+      name: 'tableName',
+      message: 'Which table would you like to view',
+      choices: ['employee', 'department', 'role']
     }
   ])
   .then(data => {
-    console.log(data)
+    viewTable(data);
   })
   .catch(err => {
     if (err) throw err
   });
 };
 
-
-logIn()
+viewTable = (obj) => {
+  const query = connection.query(
+    new Sql(obj).selectAllFromTable(),
+    [],
+    (err, res) => {
+      if (err) {
+        console.log('ERROR: ' + query.sql);
+        return;
+      }
+      console.table(res);
+      console.log(obj.tableName)
+    }
+  );
+  connection.end();
+};
