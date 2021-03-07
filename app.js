@@ -34,6 +34,7 @@ promptUser = () => {
           'View all departments'
          ,'View all roles'
          ,'View all employees'
+         ,'View payroll by department'
          ,'Add a department'
          ,'Add a role'
          ,'Add an employee'

@@ -9,11 +9,12 @@ VALUES
  ,(5, 'Sales')
  ,(6, 'Human Resources')
  ,(7, 'Business Developent')
+ ,(8, 'CEO & Assistant')
 ;
 
 INSERT INTO role (id, title, salary, department_id)
 VALUES 
-  ( 1, 'CEO', 350000, null)
+  ( 1, 'CEO', 350000, 8)
  ,( 2, 'COO', 250000, 1)
  ,( 3, 'CFO', 250000, 2)
  ,( 4, 'CTO', 250000, 3)
@@ -21,7 +22,7 @@ VALUES
  ,( 6, 'Sales Director', 210000, 5)
  ,( 7, 'Human Resources Director', 130000, 6)
  ,( 8, 'Business Development Director', 190000, 7)
- ,( 9, 'Cheif of Staff', 75000, null)
+ ,( 9, 'Cheif of Staff', 75000, 8)
  ,(10, 'Executive Assistant', 75000, 1)
  ,(11, 'Finance Director', 180000, 2)
  ,(12, 'Controller', 115000, 2)
