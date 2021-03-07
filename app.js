@@ -97,7 +97,14 @@ addDepartment = (obj) => {
   inquirer.prompt({
     type: 'input',
     message: 'Enter the department you would like to add',
-    name: 'param1'
+    name: 'param1',
+    validate: input => {
+      if (!input) {
+        console.error('\n\n~*~ Department name required ~*~');
+        return;
+      }
+      return true;
+    }
   })
   .then(data => {
     const params = Object.values(data);
@@ -136,12 +143,26 @@ promptAddRole = (depArr, obj) => {
     {
       type: 'input',
       message: 'Please enter the job title you would like to add',
-      name: 'param1'
+      name: 'param1',
+      validate: input => {
+        if (!input) {
+          console.error('\n\n~*~ Job title required ~*~');
+          return;
+        }
+        return true;
+      }
     },
     {
       type: 'input',
       message: `Please enter the role's yearly salary`,
-      name: 'param2'
+      name: 'param2',
+      validate: input => {
+        if (isNaN(input) || !input) {
+          console.error('\n\n~*~ Please enter a number ~*~');
+          return;
+        }
+        return true;
+      }
     },
     {
       type: 'list',
@@ -209,12 +230,26 @@ promptAddEmployee = (roles, managers, obj) => {
     {
       type: 'input',
       message: 'Enter the employee\'s first name',
-      name: 'first_name'
+      name: 'first_name',
+      validate: input => {
+        if (!input) {
+          console.error('\n\n~*~ First name required ~*~');
+          return;
+        }
+        return true;
+      }
     },
     {
       type: 'input',
       message: `Enter the employee\'s last name`,
-      name: 'last_name'
+      name: 'last_name',
+      validate: input => {
+        if (!input) {
+          console.error('\n\n~*~ Last name required ~*~');
+          return;
+        }
+        return true;
+      }
     },
     {
       type: 'list',
