@@ -29,7 +29,7 @@ promptUser = () => {
     {
       type: 'list',
       name: 'mainMenu',
-      message: 'Select from the following options?',
+      message: 'Please select from the following menu?',
       choices: [
           'View all departments'
          ,'View all roles'
@@ -257,25 +257,3 @@ promptAddEmployee = (roles, managers, obj) => {
     if (err) throw err;
   });
 };
-
-
-// .then(data => {
-//   const params = Object.values(data);
-//   const sql = new Sql(obj).generateQuery();
-//   connection.query(
-//     sql, 
-//     [
-//       params[0], 
-//       params[1], 
-//       parseInt(params[2].split(':')[0])
-//     ],
-//     function(err, res) {
-//       if (err) throw err;
-//       console.log(`
-//       Inserted new role: 
-//       { id: ${res.insertId}, title: ${params[0]}, salary: ${params[1]}, department: ${params[2].split(':')[1].substring(1)} }
-//       `);
-//       promptUser();
-//     }
-//   )
-// })
