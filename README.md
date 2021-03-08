@@ -8,9 +8,9 @@
 <a href = "#description"></a>
 
 ## Description
-```
+
 Employee Tracker is a command line application that allows you to create, view and update an employee database without using any SQL commands.
-```
+
 
 ## Table of Contents
   - [Description](#description)
