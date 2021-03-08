@@ -66,7 +66,7 @@ Employee Tracker is a command line application that allows you to create, view a
 ## Demo
 
 ```
-Click The Image Below For Demo Video
+Click The Image Below For Installation and Usage Demo Video
 ```
 [![Clickable Screen Shot](assets/screen-shot.png)](https://www.youtube.com/watch?v=b9fmDdnAb3A)
 
