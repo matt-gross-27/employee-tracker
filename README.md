@@ -16,6 +16,7 @@ Employee Tracker is a command line application that allows you to create, view a
   - [Description](#description)
   - [Installation](#installation)
   - [Usage](#usage)
+  - [Demo](#demo)
   - [Features](#features)
   - [Credits](#credits)
   - [License](#license)
@@ -59,6 +60,15 @@ Employee Tracker is a command line application that allows you to create, view a
 ### For continued usage:
 - Run the command ```npm start```
 - You will be presented with a menu of options. Use the arrow keys to navigate through the menu options and 'Enter' to select an option.Then - just follow the prompts!
+
+<a href = "#demo"></a>
+
+## Demo
+
+```
+Click The Image Below For Demo Video
+```
+[![Clickable Screen Shot](assets/screen-shot.png)](https://www.youtube.com/watch?v=b9fmDdnAb3A)
 
 <a href = "#features"></a>
 
